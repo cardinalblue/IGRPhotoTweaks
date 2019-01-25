@@ -68,7 +68,7 @@ extension IGRPhotoTweakView : IGRCropViewDelegate {
                                      y: CGFloat.zero,
                                      width: (newCropBounds.size.width),
                                      height: (newCropBounds.size.height))
-            cropView.center = CGPoint(x: self.frame.width.half, y: self.centerY)
+            cropView.center = CGPoint(x: self.frame.width.half, y: self.frame.height.half)
             
             // zoom the specified area of scroll view
             let zoomRect: CGRect = self.convert(scaleFrame,
