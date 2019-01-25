@@ -45,7 +45,7 @@ public class IGRPhotoTweakView: UIView {
                                                              to: self)
             let point = CGPoint(x: (rect.origin.x + rect.size.width.half),
                                 y: (rect.origin.y + rect.size.height.half))
-            let zeroPoint = CGPoint(x: self.frame.width.half, y: self.centerY)
+            let zeroPoint = CGPoint(x: self.frame.width.half, y: self.frame.height.half)
             
             return CGPoint(x: (point.x - zeroPoint.x), y: (point.y - zeroPoint.y))
         }
@@ -80,7 +80,7 @@ public class IGRPhotoTweakView: UIView {
         self.originalSize = maxBounds.size
         
         let scrollView = IGRPhotoScrollView(frame: maxBounds)
-        scrollView.center = CGPoint(x: self.frame.width.half, y: self.centerY)
+        scrollView.center = CGPoint(x: self.frame.width.half, y: self.frame.height.half)
         scrollView.delegate = self
         scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.addSubview(scrollView)
@@ -103,11 +103,10 @@ public class IGRPhotoTweakView: UIView {
     // constants
     fileprivate var maximumCanvasSize: CGSize!
     fileprivate var originalPoint: CGPoint!
-    internal var centerY: CGFloat!
     
     // MARK: - Life Cicle
     
-    init(frame: CGRect, image: UIImage, customizationDelegate: IGRPhotoTweakViewCustomizationDelegate!) {
+    public init(frame: CGRect, image: UIImage, customizationDelegate: IGRPhotoTweakViewCustomizationDelegate!) {
         super.init(frame: frame)
         
         self.image = image
@@ -130,7 +129,7 @@ public class IGRPhotoTweakView: UIView {
         
         if !manualMove {
             self.originalSize = self.maxBounds().size
-            self.scrollView.center = CGPoint(x: (self.frame.width * 0.5), y: self.centerY)
+            self.scrollView.center = CGPoint(x: (self.frame.width * 0.5), y: self.frame.height.half)
             
             self.cropView.center = self.scrollView.center
             self.scrollView.checkContentOffset()
@@ -143,7 +142,7 @@ public class IGRPhotoTweakView: UIView {
         UIView.animate(withDuration: kAnimationDuration, animations: {() -> Void in
             self.radians = CGFloat.zero
             self.scrollView.transform = CGAffineTransform.identity
-            self.scrollView.center = CGPoint(x: self.frame.width.half, y: self.centerY)
+            self.scrollView.center = CGPoint(x: self.frame.width.half, y: self.frame.height.half)
             self.scrollView.bounds = CGRect(x: CGFloat.zero,
                                             y: CGFloat.zero,
                                             width: self.originalSize.width,
@@ -159,7 +158,7 @@ public class IGRPhotoTweakView: UIView {
     public func applyDeviceRotation() {
         self.resetView()
         
-        self.scrollView.center = CGPoint(x: self.frame.width.half, y: self.centerY)
+        self.scrollView.center = CGPoint(x: self.frame.width.half, y: self.frame.height.half)
         self.scrollView.bounds = CGRect(x: CGFloat.zero,
                                         y: CGFloat.zero,
                                         width: self.originalSize.width,
@@ -180,9 +179,7 @@ public class IGRPhotoTweakView: UIView {
     fileprivate func maxBounds() -> CGRect {
         // scale the image
         self.maximumCanvasSize = CGSize(width: (kMaximumCanvasWidthRatio * self.frame.size.width),
-                                        height: (kMaximumCanvasHeightRatio * self.frame.size.height - self.canvasHeaderHeigth()))
-        
-        self.centerY = self.maximumCanvasSize.height.half + self.canvasHeaderHeigth()
+                                        height: (kMaximumCanvasHeightRatio * self.frame.size.height))
         
         let scaleX: CGFloat = self.image.size.width / self.maximumCanvasSize.width
         let scaleY: CGFloat = self.image.size.height / self.maximumCanvasSize.height
