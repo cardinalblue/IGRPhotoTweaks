@@ -212,12 +212,13 @@ public class IGRPhotoTweakView: UIView {
 
         // scale scroll view
         let minimumZoomScale = self.scrollView.zoomScaleToBound()
-        if  !self.manualZoomed || self.scrollView.zoomScale < minimumZoomScale {
-            self.scrollView.setZoomScale(minimumZoomScale, animated: false)
-            self.manualZoomed = false
-        }
+        let shouldUpdateZoomScale = self.scrollView.zoomScale == self.scrollView.minimumZoomScale
+                                     || self.scrollView.zoomScale < minimumZoomScale
         if self.scrollView.minimumZoomScale != minimumZoomScale {
             self.scrollView.minimumZoomScale = minimumZoomScale
+        }
+        if shouldUpdateZoomScale {
+            self.scrollView.setZoomScale(minimumZoomScale, animated: false)
         }
 
         self.scrollView.checkContentOffset()
@@ -251,12 +252,12 @@ extension IGRPhotoTweakView {
     }
 
     public func update(parameter: CropParameter) {
-        updatePosition()
-        
         scrollView.zoomScale = parameter.scrollZoomScale
         scrollView.bounds = parameter.scrollViewBounds
         scrollView.contentOffset = parameter.scrollViewContentOffset
         scrollView.transform = parameter.scrollViewTransform
+
+        updatePosition()
     }
 
     var imageTransform: CGAffineTransform {
