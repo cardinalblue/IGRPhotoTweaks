@@ -220,3 +220,34 @@ public class IGRPhotoTweakView: UIView {
         self.scrollView.checkContentOffset()
     }
 }
+
+extension IGRPhotoTweakView {
+    // crop
+    public func croppedImage() -> UIImage? {
+        var transform = CGAffineTransform.identity
+        // translate
+        let translation: CGPoint = photoTranslation
+        transform = transform.translatedBy(x: translation.x, y: translation.y)
+        // rotate
+        transform = transform.rotated(by: radians)
+        // scale
+
+        let t: CGAffineTransform = photoContentView.transform
+        let xScale: CGFloat = sqrt(t.a * t.a + t.c * t.c)
+        let yScale: CGFloat = sqrt(t.b * t.b + t.d * t.d)
+        transform = transform.scaledBy(x: xScale, y: yScale)
+
+        if let fixedImage = self.image.cgImageWithFixedOrientation() {
+            let imageRef = fixedImage.transformedImage(transform,
+                                                       zoomScale: scrollView.zoomScale,
+                                                       sourceSize: self.image.size,
+                                                       cropSize: cropView.frame.size,
+                                                       imageViewSize: photoContentView.bounds.size)
+
+            let image = UIImage(cgImage: imageRef)
+            return image
+        } else {
+            return nil
+        }
+    }
+}
