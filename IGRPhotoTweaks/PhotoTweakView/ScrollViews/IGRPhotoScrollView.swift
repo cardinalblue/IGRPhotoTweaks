@@ -82,27 +82,7 @@ public class IGRPhotoScrollView: UIScrollView {
         contentOffset.x = offsetX
         self.contentOffset = contentOffset
     }
-    
-    override public var contentOffset: CGPoint {
-        set {
-            super.contentOffset = newValue
-            
-            if (!isUpdatingContentOffset) {
-                isUpdatingContentOffset = true
-                updateDelegate?.scrollViewDidStartUpdateScrollContentOffset(self)
-            }
-            
-            let selector = #selector(self.stopUpdateContentOffset)
-            IGRPhotoScrollView.cancelPreviousPerformRequests(withTarget: self,
-                                                             selector: selector,
-                                                             object: nil)
-            perform(selector, with: nil, afterDelay: kAnimationDuration * 2.0)
-        }
-        get {
-            return super.contentOffset
-        }
-    }
-    
+
     @objc func stopUpdateContentOffset() {
         if (isUpdatingContentOffset) {
             isUpdatingContentOffset = false

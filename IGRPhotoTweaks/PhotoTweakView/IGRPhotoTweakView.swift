@@ -195,7 +195,7 @@ public class IGRPhotoTweakView: UIView {
         
         return bounds
     }
-    
+
     internal func updatePosition() {
         // position scroll view
         let width: CGFloat = abs(cos(self.radians)) * self.cropView.frame.size.width + abs(sin(self.radians)) * self.cropView.frame.size.height
@@ -209,17 +209,73 @@ public class IGRPhotoTweakView: UIView {
                                        y: (contentOffsetCenter.y - self.scrollView.bounds.size.height.half))
         self.scrollView.contentOffset = newContentOffset
         self.scrollView.center = center
-        
+
         // scale scroll view
-        let shouldScale: Bool = self.scrollView.contentSize.width / self.scrollView.bounds.size.width <= 1.0 ||
-            self.scrollView.contentSize.height / self.scrollView.bounds.size.height <= 1.0
-        if !self.manualZoomed || shouldScale {
-            let zoom = self.scrollView.zoomScaleToBound()
-            self.scrollView.setZoomScale(zoom, animated: false)
-            self.scrollView.minimumZoomScale = zoom
+        let minimumZoomScale = self.scrollView.zoomScaleToBound()
+        if  !self.manualZoomed || self.scrollView.zoomScale < minimumZoomScale {
+            self.scrollView.setZoomScale(minimumZoomScale, animated: false)
             self.manualZoomed = false
         }
-        
+        if self.scrollView.minimumZoomScale != minimumZoomScale {
+            self.scrollView.minimumZoomScale = minimumZoomScale
+        }
+
         self.scrollView.checkContentOffset()
+    }
+}
+
+public struct CropParameter {
+    public let transform: CGAffineTransform
+    public let zoomScale: CGFloat
+    public let sourceSize: CGSize
+    public let imageViewFrame: CGRect
+
+    public let cropFrame: CGRect
+    public let scrollZoomScale: CGFloat
+    public let scrollViewTransform: CGAffineTransform
+    public let scrollViewBounds: CGRect
+    public let scrollViewContentOffset: CGPoint
+}
+
+extension IGRPhotoTweakView {
+    public var cropParameter: CropParameter {
+        return CropParameter(transform: imageTransform,
+                             zoomScale: scrollView.zoomScale,
+                             sourceSize: image.size,
+                             imageViewFrame: photoContentView.bounds,
+                             cropFrame: cropView.bounds,
+                             scrollZoomScale: scrollView.zoomScale,
+                             scrollViewTransform: scrollView.transform,
+                             scrollViewBounds: scrollView.bounds,
+                             scrollViewContentOffset: scrollView.contentOffset)
+    }
+
+    public func update(parameter: CropParameter) {
+        updatePosition()
+        
+        scrollView.zoomScale = parameter.scrollZoomScale
+        scrollView.bounds = parameter.scrollViewBounds
+        scrollView.contentOffset = parameter.scrollViewContentOffset
+        scrollView.transform = parameter.scrollViewTransform
+    }
+
+    var imageTransform: CGAffineTransform {
+        // Scale: scrollView's zoomScale
+        // Angle: scrollView's transfrom
+        // contentOffset: scrollView's contentOffset
+        var transform = CGAffineTransform.identity
+        // translate
+        let translation: CGPoint = photoTranslation
+        transform = transform.translatedBy(x: translation.x, y: translation.y)
+        // rotate
+        transform = transform.rotated(by: radians)
+        // scale
+
+        let t: CGAffineTransform = photoContentView.transform
+        let xScale: CGFloat = sqrt(t.a * t.a + t.c * t.c)
+        let yScale: CGFloat = sqrt(t.b * t.b + t.d * t.d)
+        transform = transform.scaledBy(x: xScale, y: yScale)
+
+        return transform
     }
 }

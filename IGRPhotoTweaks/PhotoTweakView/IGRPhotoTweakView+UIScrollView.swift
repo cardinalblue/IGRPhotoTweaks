@@ -33,6 +33,25 @@ extension IGRPhotoTweakView : UIScrollViewDelegate {
         self.cropView.dismissCropLines()
         self.updatePosition()
     }
+
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.highlightMask(true, animate: true)
+    }
+
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.updateMasks()
+        self.highlightMask(false, animate: true)
+        if !decelerate {
+            self.updatePosition()
+        }
+    }
+
+    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint,
+                                          targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let contentOffset = CGPoint(x: max(min(self.scrollView.contentSize.width, self.scrollView.contentOffset.x + velocity.x), 0),
+                                    y: max(min(self.scrollView.contentSize.height, self.scrollView.contentOffset.y + velocity.y), 0))
+        targetContentOffset.pointee = contentOffset
+    }
 }
 
 extension IGRPhotoTweakView : IGRPhotoScrollViewDelegate {
@@ -43,5 +62,6 @@ extension IGRPhotoTweakView : IGRPhotoScrollViewDelegate {
     public func scrollViewDidStopScrollUpdateContentOffset(_ scrollView: IGRPhotoScrollView) {
         self.updateMasks()
         self.highlightMask(false, animate: true)
+        self.updatePosition()
     }
 }
