@@ -10,7 +10,7 @@ import UIKit
 
 extension UIImage {
     
-    func cgImageWithFixedOrientation() -> CGImage? {
+    public func cgImageWithFixedOrientation() -> CGImage? {
         
         guard let cgImage = self.cgImage, let colorSpace = cgImage.colorSpace else {
             return nil

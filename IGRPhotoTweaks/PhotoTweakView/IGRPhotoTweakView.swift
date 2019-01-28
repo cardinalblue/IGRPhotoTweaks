@@ -221,9 +221,24 @@ public class IGRPhotoTweakView: UIView {
     }
 }
 
+public struct CropParameter {
+    public let transform: CGAffineTransform
+    public let zoomScale: CGFloat
+    public let sourceSize: CGSize
+    public let cropSize: CGSize
+    public let imageViewSize: CGSize
+}
+
 extension IGRPhotoTweakView {
-    // crop
-    public func croppedImage() -> UIImage? {
+    public var cropParameter: CropParameter {
+        return CropParameter(transform: imageTransform,
+                             zoomScale: scrollView.zoomScale,
+                             sourceSize: image.size,
+                             cropSize: cropView.frame.size,
+                             imageViewSize: photoContentView.bounds.size)
+    }
+
+    var imageTransform: CGAffineTransform {
         var transform = CGAffineTransform.identity
         // translate
         let translation: CGPoint = photoTranslation
@@ -237,17 +252,6 @@ extension IGRPhotoTweakView {
         let yScale: CGFloat = sqrt(t.b * t.b + t.d * t.d)
         transform = transform.scaledBy(x: xScale, y: yScale)
 
-        if let fixedImage = self.image.cgImageWithFixedOrientation() {
-            let imageRef = fixedImage.transformedImage(transform,
-                                                       zoomScale: scrollView.zoomScale,
-                                                       sourceSize: self.image.size,
-                                                       cropSize: cropView.frame.size,
-                                                       imageViewSize: photoContentView.bounds.size)
-
-            let image = UIImage(cgImage: imageRef)
-            return image
-        } else {
-            return nil
-        }
+        return transform
     }
 }
