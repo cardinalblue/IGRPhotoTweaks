@@ -88,7 +88,7 @@ extension IGRPhotoTweakView : IGRCropViewDelegate {
         scaleM = min(1.0, scaleM)
         
         UIView.animate(withDuration: kAnimationDuration, animations: {() -> Void in
-            self.scrollView.checkContentOffset()
+            self.updatePosition()
             self.cropView.layoutIfNeeded()
         })
         

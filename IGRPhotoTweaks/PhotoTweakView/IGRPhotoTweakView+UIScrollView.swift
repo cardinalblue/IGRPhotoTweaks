@@ -28,8 +28,10 @@ extension IGRPhotoTweakView : UIScrollViewDelegate {
     }
     
     public func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+        self.didPinchImage = true
         self.manualZoomed = true
         self.cropView.dismissCropLines()
+        self.updatePosition()
     }
 }
 

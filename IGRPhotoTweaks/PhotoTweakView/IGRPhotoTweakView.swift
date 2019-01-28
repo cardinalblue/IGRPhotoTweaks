@@ -103,7 +103,10 @@ public class IGRPhotoTweakView: UIView {
     // constants
     fileprivate var maximumCanvasSize: CGSize!
     fileprivate var originalPoint: CGPoint!
-    
+
+    // Analytics
+    internal var didPinchImage = false
+
     // MARK: - Life Cicle
     
     public init(frame: CGRect, image: UIImage, customizationDelegate: IGRPhotoTweakViewCustomizationDelegate!) {
