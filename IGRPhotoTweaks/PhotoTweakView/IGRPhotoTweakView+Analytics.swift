@@ -27,6 +27,6 @@ extension IGRPhotoTweakView {
     }
 
     public func isPinchImage() -> Bool {
-        return self.didPinchImage
+        return self.scrollView.zoomScale != 1
     }
 }
