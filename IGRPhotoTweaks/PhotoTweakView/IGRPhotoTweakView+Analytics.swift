@@ -10,8 +10,7 @@ import UIKit
 
 extension IGRPhotoTweakView {
     public func isFliped() -> Bool {
-        // TODO: isFliped
-        return false
+        return flipTransform != .identity
     }
 
     public func isRotated() -> Bool {
