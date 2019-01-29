@@ -101,7 +101,10 @@ public class IGRPhotoTweakView: UIView {
     internal var leftMask:   IGRCropMaskView!
     internal var bottomMask: IGRCropMaskView!
     internal var rightMask:  IGRCropMaskView!
-    
+
+    // flip transform
+    internal var flipTransform =  CGAffineTransform.identity
+
     // constants
     fileprivate var maximumCanvasSize: CGSize!
     fileprivate var originalPoint: CGPoint!
@@ -225,6 +228,7 @@ public class IGRPhotoTweakView: UIView {
 public struct CropParameter {
     public let transform: CGAffineTransform
     public let zoomScale: CGFloat
+    public let flipTransform: CGAffineTransform
     public let sourceSize: CGSize
     public let imageViewFrame: CGRect
 
@@ -242,6 +246,7 @@ extension IGRPhotoTweakView {
     public var cropParameter: CropParameter {
         return CropParameter(transform: imageTransform,
                              zoomScale: scrollView.zoomScale,
+                             flipTransform: flipTransform,
                              sourceSize: image.size,
                              imageViewFrame: photoContentView.bounds,
                              cropFrame: cropView.frame,
@@ -262,14 +267,12 @@ extension IGRPhotoTweakView {
 
         cropView.frame = parameter.cropFrame
 
+        flipTransform = parameter.flipTransform
         rotation = parameter.rotation
         straighten = parameter.straighten
     }
 
     var imageTransform: CGAffineTransform {
-        // Scale: scrollView's zoomScale
-        // Angle: scrollView's transfrom
-        // contentOffset: scrollView's contentOffset
         var transform = CGAffineTransform.identity
         // translate
         let translation: CGPoint = photoTranslation
@@ -277,7 +280,6 @@ extension IGRPhotoTweakView {
         // rotate
         transform = transform.rotated(by: radians)
         // scale
-
         let t: CGAffineTransform = photoContentView.transform
         let xScale: CGFloat = sqrt(t.a * t.a + t.c * t.c)
         let yScale: CGFloat = sqrt(t.b * t.b + t.d * t.d)
