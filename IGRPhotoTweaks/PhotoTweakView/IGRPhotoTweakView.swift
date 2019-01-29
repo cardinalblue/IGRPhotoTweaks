@@ -11,7 +11,6 @@ import UIKit
 public class IGRPhotoTweakView: UIView {
     
     //MARK: - Public VARs
-    
     public weak var customizationDelegate: IGRPhotoTweakViewCustomizationDelegate?
     
     private(set) lazy var cropView: IGRCropView! = { [unowned self] by in
@@ -68,14 +67,17 @@ public class IGRPhotoTweakView: UIView {
             return self.scrollView.minimumZoomScale
         }
     }
-    
+
+    public var rotation: CGFloat = CGFloat.zero
+    public var straighten: CGFloat = CGFloat.zero
+    public var radians: CGFloat {
+        return rotation + straighten
+    }
+
     //MARK: - Private VARs
-    
-    internal var radians: CGFloat       = CGFloat.zero
-    fileprivate var photoContentOffset  = CGPoint.zero
+    fileprivate var photoContentOffset = CGPoint.zero
     
     internal lazy var scrollView: IGRPhotoScrollView! = { [unowned self] by in
-        
         let maxBounds = self.maxBounds()
         self.originalSize = maxBounds.size
         
@@ -86,7 +88,7 @@ public class IGRPhotoTweakView: UIView {
         self.addSubview(scrollView)
         
         return scrollView
-        }(())
+    }(())
     
     internal weak var image: UIImage!
     internal var originalSize = CGSize.zero
@@ -99,16 +101,15 @@ public class IGRPhotoTweakView: UIView {
     internal var leftMask:   IGRCropMaskView!
     internal var bottomMask: IGRCropMaskView!
     internal var rightMask:  IGRCropMaskView!
-    
+
+    // flip transform
+    internal var flipTransform =  CGAffineTransform.identity
+
     // constants
     fileprivate var maximumCanvasSize: CGSize!
     fileprivate var originalPoint: CGPoint!
 
-    // Analytics
-    internal var didPinchImage = false
-
     // MARK: - Life Cicle
-    
     public init(frame: CGRect, image: UIImage, customizationDelegate: IGRPhotoTweakViewCustomizationDelegate!) {
         super.init(frame: frame)
         
@@ -140,10 +141,10 @@ public class IGRPhotoTweakView: UIView {
     }
     
     //MARK: - Public FUNCs
-    
     public func resetView() {
         UIView.animate(withDuration: kAnimationDuration, animations: {() -> Void in
-            self.radians = CGFloat.zero
+            self.straighten = CGFloat.zero
+            self.rotation = CGFloat.zero
             self.scrollView.transform = CGAffineTransform.identity
             self.scrollView.center = CGPoint(x: self.frame.width.half, y: self.frame.height.half)
             self.scrollView.bounds = CGRect(x: CGFloat.zero,
@@ -178,7 +179,6 @@ public class IGRPhotoTweakView: UIView {
     }
     
     //MARK: - Private FUNCs
-    
     fileprivate func maxBounds() -> CGRect {
         // scale the image
         self.maximumCanvasSize = CGSize(width: (kMaximumCanvasWidthRatio * self.frame.size.width),
@@ -195,7 +195,7 @@ public class IGRPhotoTweakView: UIView {
         
         return bounds
     }
-    
+
     internal func updatePosition() {
         // position scroll view
         let width: CGFloat = abs(cos(self.radians)) * self.cropView.frame.size.width + abs(sin(self.radians)) * self.cropView.frame.size.height
@@ -209,17 +209,82 @@ public class IGRPhotoTweakView: UIView {
                                        y: (contentOffsetCenter.y - self.scrollView.bounds.size.height.half))
         self.scrollView.contentOffset = newContentOffset
         self.scrollView.center = center
-        
+
         // scale scroll view
-        let shouldScale: Bool = self.scrollView.contentSize.width / self.scrollView.bounds.size.width <= 1.0 ||
-            self.scrollView.contentSize.height / self.scrollView.bounds.size.height <= 1.0
-        if !self.manualZoomed || shouldScale {
-            let zoom = self.scrollView.zoomScaleToBound()
-            self.scrollView.setZoomScale(zoom, animated: false)
-            self.scrollView.minimumZoomScale = zoom
-            self.manualZoomed = false
+        let minimumZoomScale = self.scrollView.zoomScaleToBound()
+        let shouldUpdateZoomScale = self.scrollView.zoomScale == self.scrollView.minimumZoomScale
+                                     || self.scrollView.zoomScale < minimumZoomScale
+        if self.scrollView.minimumZoomScale != minimumZoomScale {
+            self.scrollView.minimumZoomScale = minimumZoomScale
         }
-        
+        if shouldUpdateZoomScale {
+            self.scrollView.setZoomScale(minimumZoomScale, animated: false)
+        }
+
         self.scrollView.checkContentOffset()
+    }
+}
+
+public struct CropParameter {
+    public let transform: CGAffineTransform
+    public let zoomScale: CGFloat
+    public let flipTransform: CGAffineTransform
+    public let sourceSize: CGSize
+    public let imageViewFrame: CGRect
+
+    public let cropFrame: CGRect
+    public let scrollZoomScale: CGFloat
+    public let scrollViewTransform: CGAffineTransform
+    public let scrollViewBounds: CGRect
+    public let scrollViewContentOffset: CGPoint
+
+    public let rotation: CGFloat
+    public let straighten: CGFloat
+}
+
+extension IGRPhotoTweakView {
+    public var cropParameter: CropParameter {
+        return CropParameter(transform: imageTransform,
+                             zoomScale: scrollView.zoomScale,
+                             flipTransform: flipTransform,
+                             sourceSize: image.size,
+                             imageViewFrame: photoContentView.bounds,
+                             cropFrame: cropView.frame,
+                             scrollZoomScale: scrollView.zoomScale,
+                             scrollViewTransform: scrollView.transform,
+                             scrollViewBounds: scrollView.bounds,
+                             scrollViewContentOffset: scrollView.contentOffset,
+                             rotation: rotation,
+                             straighten: straighten)
+    }
+
+    public func update(parameter: CropParameter) {
+        scrollView.zoomScale = parameter.scrollZoomScale
+        scrollView.bounds = parameter.scrollViewBounds
+        scrollView.contentOffset = parameter.scrollViewContentOffset
+        scrollView.transform = parameter.scrollViewTransform
+        updatePosition()
+
+        cropView.frame = parameter.cropFrame
+
+        flipTransform = parameter.flipTransform
+        rotation = parameter.rotation
+        straighten = parameter.straighten
+    }
+
+    var imageTransform: CGAffineTransform {
+        var transform = CGAffineTransform.identity
+        // translate
+        let translation: CGPoint = photoTranslation
+        transform = transform.translatedBy(x: translation.x, y: translation.y)
+        // rotate
+        transform = transform.rotated(by: radians)
+        // scale
+        let t: CGAffineTransform = photoContentView.transform
+        let xScale: CGFloat = sqrt(t.a * t.a + t.c * t.c)
+        let yScale: CGFloat = sqrt(t.b * t.b + t.d * t.d)
+        transform = transform.scaledBy(x: xScale, y: yScale)
+
+        return transform
     }
 }

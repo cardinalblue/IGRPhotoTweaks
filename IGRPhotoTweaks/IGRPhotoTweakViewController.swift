@@ -124,6 +124,7 @@ open class IGRPhotoTweakViewController: UIViewController {
         if let fixedImage = self.image.cgImageWithFixedOrientation() {
             let imageRef = fixedImage.transformedImage(transform,
                                                        zoomScale: self.photoView.scrollView.zoomScale,
+                                                       flipTransform: self.photoView.flipTransform,
                                                        sourceSize: self.image.size,
                                                        cropSize: self.photoView.cropView.frame.size,
                                                        imageViewSize: self.photoView.photoContentView.bounds.size)

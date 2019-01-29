@@ -10,8 +10,7 @@ import UIKit
 
 extension IGRPhotoTweakView {
     public func isFliped() -> Bool {
-        // TODO: isFliped
-        return false
+        return flipTransform != .identity
     }
 
     public func isRotated() -> Bool {
@@ -27,6 +26,6 @@ extension IGRPhotoTweakView {
     }
 
     public func isPinchImage() -> Bool {
-        return self.didPinchImage
+        return self.scrollView.zoomScale != 1
     }
 }
