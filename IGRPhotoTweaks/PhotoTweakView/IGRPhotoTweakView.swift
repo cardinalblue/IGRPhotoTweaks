@@ -247,7 +247,7 @@ extension IGRPhotoTweakView {
                              zoomScale: scrollView.zoomScale,
                              sourceSize: image.size,
                              imageViewFrame: photoContentView.bounds,
-                             cropFrame: cropView.bounds,
+                             cropFrame: cropView.frame,
                              scrollZoomScale: scrollView.zoomScale,
                              scrollViewTransform: scrollView.transform,
                              scrollViewBounds: scrollView.bounds,
@@ -261,8 +261,10 @@ extension IGRPhotoTweakView {
         scrollView.bounds = parameter.scrollViewBounds
         scrollView.contentOffset = parameter.scrollViewContentOffset
         scrollView.transform = parameter.scrollViewTransform
-
         updatePosition()
+
+        cropView.frame = parameter.cropFrame
+
         rotation = parameter.rotation
         straighten = parameter.straighten
     }
