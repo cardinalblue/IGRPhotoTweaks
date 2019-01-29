@@ -38,17 +38,17 @@ extension IGRPhotoTweakView {
 
     public func flipVertical() {
         flipTransform = flipTransform.scaledBy(x: 1, y: -1)
-        scrollView.transform = scrollView.transform.scaledBy(x: 1, y: -1)
+        updateScrollView()
     }
 
     public func flipHorizontal() {
         flipTransform = flipTransform.scaledBy(x: -1, y: 1)
-        scrollView.transform = scrollView.transform.scaledBy(x: -1, y: 1)
+        updateScrollView()
     }
 
     func updateScrollView() {
         // rotate scroll view
-        scrollView.transform = CGAffineTransform(rotationAngle: radians)
+        scrollView.transform = flipTransform.concatenating(CGAffineTransform(rotationAngle: radians))
         updatePosition()
     }
 }
