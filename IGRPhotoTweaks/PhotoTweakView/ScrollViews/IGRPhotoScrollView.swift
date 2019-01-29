@@ -67,16 +67,8 @@ public class IGRPhotoScrollView: UIScrollView {
     //MARK: - Content Offsets
     
     public func checkContentOffset() {
-        self.setContentOffsetX(max(self.contentOffset.x, 0))
-        self.setContentOffsetY(max(self.contentOffset.y, 0))
-        
-        if self.contentSize.height - self.contentOffset.y <= self.bounds.size.height {
-            self.setContentOffsetY(self.contentSize.height - self.bounds.size.height)
-        }
-        
-        if self.contentSize.width - self.contentOffset.x <= self.bounds.size.width {
-            self.setContentOffsetX(self.contentSize.width - self.bounds.size.width)
-        }
+        self.setContentOffsetX(max(min(self.contentSize.width,  self.contentOffset.x), 0))
+        self.setContentOffsetY(max(min(self.contentSize.height, self.contentOffset.y), 0))
     }
     
     public func setContentOffsetY(_ offsetY: CGFloat) {
@@ -90,27 +82,7 @@ public class IGRPhotoScrollView: UIScrollView {
         contentOffset.x = offsetX
         self.contentOffset = contentOffset
     }
-    
-    override public var contentOffset: CGPoint {
-        set {
-            super.contentOffset = newValue
-            
-            if (!isUpdatingContentOffset) {
-                isUpdatingContentOffset = true
-                updateDelegate?.scrollViewDidStartUpdateScrollContentOffset(self)
-            }
-            
-            let selector = #selector(self.stopUpdateContentOffset)
-            IGRPhotoScrollView.cancelPreviousPerformRequests(withTarget: self,
-                                                             selector: selector,
-                                                             object: nil)
-            perform(selector, with: nil, afterDelay: kAnimationDuration * 2.0)
-        }
-        get {
-            return super.contentOffset
-        }
-    }
-    
+
     @objc func stopUpdateContentOffset() {
         if (isUpdatingContentOffset) {
             isUpdatingContentOffset = false
