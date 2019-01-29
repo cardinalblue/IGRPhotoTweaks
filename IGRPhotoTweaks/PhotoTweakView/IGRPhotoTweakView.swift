@@ -11,7 +11,6 @@ import UIKit
 public class IGRPhotoTweakView: UIView {
     
     //MARK: - Public VARs
-    
     public weak var customizationDelegate: IGRPhotoTweakViewCustomizationDelegate?
     
     private(set) lazy var cropView: IGRCropView! = { [unowned self] by in
@@ -68,14 +67,17 @@ public class IGRPhotoTweakView: UIView {
             return self.scrollView.minimumZoomScale
         }
     }
-    
+
+    public var rotation: CGFloat = CGFloat.zero
+    public var straighten: CGFloat = CGFloat.zero
+    public var radians: CGFloat {
+        return rotation + straighten
+    }
+
     //MARK: - Private VARs
-    
-    internal var radians: CGFloat       = CGFloat.zero
-    fileprivate var photoContentOffset  = CGPoint.zero
+    fileprivate var photoContentOffset = CGPoint.zero
     
     internal lazy var scrollView: IGRPhotoScrollView! = { [unowned self] by in
-        
         let maxBounds = self.maxBounds()
         self.originalSize = maxBounds.size
         
@@ -86,7 +88,7 @@ public class IGRPhotoTweakView: UIView {
         self.addSubview(scrollView)
         
         return scrollView
-        }(())
+    }(())
     
     internal weak var image: UIImage!
     internal var originalSize = CGSize.zero
@@ -108,7 +110,6 @@ public class IGRPhotoTweakView: UIView {
     internal var didPinchImage = false
 
     // MARK: - Life Cicle
-    
     public init(frame: CGRect, image: UIImage, customizationDelegate: IGRPhotoTweakViewCustomizationDelegate!) {
         super.init(frame: frame)
         
@@ -140,10 +141,10 @@ public class IGRPhotoTweakView: UIView {
     }
     
     //MARK: - Public FUNCs
-    
     public func resetView() {
         UIView.animate(withDuration: kAnimationDuration, animations: {() -> Void in
-            self.radians = CGFloat.zero
+            self.straighten = CGFloat.zero
+            self.rotation = CGFloat.zero
             self.scrollView.transform = CGAffineTransform.identity
             self.scrollView.center = CGPoint(x: self.frame.width.half, y: self.frame.height.half)
             self.scrollView.bounds = CGRect(x: CGFloat.zero,
@@ -178,7 +179,6 @@ public class IGRPhotoTweakView: UIView {
     }
     
     //MARK: - Private FUNCs
-    
     fileprivate func maxBounds() -> CGRect {
         // scale the image
         self.maximumCanvasSize = CGSize(width: (kMaximumCanvasWidthRatio * self.frame.size.width),
@@ -236,6 +236,9 @@ public struct CropParameter {
     public let scrollViewTransform: CGAffineTransform
     public let scrollViewBounds: CGRect
     public let scrollViewContentOffset: CGPoint
+
+    public let rotation: CGFloat
+    public let straighten: CGFloat
 }
 
 extension IGRPhotoTweakView {
@@ -248,7 +251,9 @@ extension IGRPhotoTweakView {
                              scrollZoomScale: scrollView.zoomScale,
                              scrollViewTransform: scrollView.transform,
                              scrollViewBounds: scrollView.bounds,
-                             scrollViewContentOffset: scrollView.contentOffset)
+                             scrollViewContentOffset: scrollView.contentOffset,
+                             rotation: rotation,
+                             straighten: straighten)
     }
 
     public func update(parameter: CropParameter) {
@@ -258,6 +263,8 @@ extension IGRPhotoTweakView {
         scrollView.transform = parameter.scrollViewTransform
 
         updatePosition()
+        rotation = parameter.rotation
+        straighten = parameter.straighten
     }
 
     var imageTransform: CGAffineTransform {

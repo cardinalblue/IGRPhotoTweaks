@@ -10,21 +10,45 @@ import Foundation
 
 extension IGRPhotoTweakView {
     public func changeAngle(radians: CGFloat) {
+        straighten = radians
+
         // update masks
-        self.highlightMask(true, animate: false)
-        
+        highlightMask(true, animate: false)
+
         // update grids
-        self.cropView.updateGridLines(animate: false)
-        
-        // rotate scroll view
-        self.radians = radians
-        self.scrollView.transform = CGAffineTransform(rotationAngle: self.radians)
-        
-        self.updatePosition()
+        cropView.updateGridLines(animate: false)
+
+        updateScrollView()
     }
-    
+
     public func stopChangeAngle() {
-        self.cropView.dismissGridLines()
-        self.highlightMask(false, animate: false)
+        cropView.dismissGridLines()
+        highlightMask(false, animate: false)
+    }
+
+    public func rotateClockwise() {
+        rotation += IGRRadianAngle.toRadians(90)
+        updateScrollView()
+    }
+
+    public func rotateConterclockwise() {
+        rotation -= IGRRadianAngle.toRadians(90)
+        updateScrollView()
+    }
+
+    public func flipVertical() {
+        // TODO: should add params for generate image
+        scrollView.photoContentView.transform = scrollView.photoContentView.transform.scaledBy(x: -1, y: 1)
+    }
+
+    public func flipHorizontal() {
+        // TODO: should add params for generate image
+        scrollView.photoContentView.transform = scrollView.photoContentView.transform.scaledBy(x: 1, y: -1)
+    }
+
+    func updateScrollView() {
+        // rotate scroll view
+        scrollView.transform = CGAffineTransform(rotationAngle: radians)
+        updatePosition()
     }
 }
