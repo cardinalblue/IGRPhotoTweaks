@@ -31,12 +31,21 @@ extension IGRPhotoTweakView : IGRCropViewDelegate {
         let scaleX: CGFloat = self.originalSize.width / cropView.bounds.size.width
         let scaleY: CGFloat = self.originalSize.height / cropView.bounds.size.height
         let scale: CGFloat = min(scaleX, scaleY)
-        
+
         // calculate the new bounds of crop view
         let newCropBounds = CGRect(x: CGFloat.zero,
                                    y: CGFloat.zero,
                                    width: (scale * cropView.frame.size.width),
                                    height: (scale * cropView.frame.size.height))
+
+        // calculate the zoom area of scroll view
+        var scaleFrame: CGRect = cropView.frame
+        if scaleFrame.size.width >= self.scrollView.contentSize.width {
+            scaleFrame.size.width = self.scrollView.contentSize.width - 1
+        }
+        if scaleFrame.size.height >= self.scrollView.contentSize.height {
+            scaleFrame.size.height = self.scrollView.contentSize.height - 1
+        }
 
         UIView.animate(withDuration: kAnimationDuration, animations: {() -> Void in
             // animate crop view
@@ -45,18 +54,22 @@ extension IGRPhotoTweakView : IGRCropViewDelegate {
                                      width: (newCropBounds.size.width),
                                      height: (newCropBounds.size.height))
             cropView.center = CGPoint(x: self.frame.width.half, y: self.frame.height.half)
+
+            // update scrollView
+            self.updatePosition()
+
+            // zoom the specified area of scroll view
+            let zoomRect: CGRect = self.convert(scaleFrame,
+                                                to: self.scrollView.photoContentView)
+            self.scrollView.zoom(to: zoomRect, animated: false)
+
+            self.cropView.layoutIfNeeded()
         })
 
         // update masks
         self.cropView.dismissCropLines()
         self.cropView.dismissGridLines()
         self.highlightMask(false, animate: true)
-
-        // update scrollView
-        UIView.animate(withDuration: kAnimationDuration, animations: {() -> Void in
-            self.updatePosition()
-            self.cropView.layoutIfNeeded()
-        })
     }
     
     public func cropViewInsideValidFrame(for point: CGPoint, from cropView: IGRCropView) -> Bool {
