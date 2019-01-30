@@ -92,10 +92,13 @@ public class IGRPhotoTweakView: UIView {
     
     internal weak var image: UIImage!
     internal var originalSize = CGSize.zero
-    
-    internal var manualZoomed = false
+
     internal var manualMove   = false
-    
+
+    // Analytics
+    internal var didPinchImage = false
+    internal var didDragCropView = false
+
     // masks
     internal var topMask:    IGRCropMaskView!
     internal var leftMask:   IGRCropMaskView!
@@ -263,17 +266,18 @@ extension IGRPhotoTweakView {
     }
 
     public func update(parameter: CropParameter) {
+        cropView.frame = parameter.cropFrame
+        rotation = parameter.rotation
+        straighten = parameter.straighten
+
+        updatePosition()
+
         scrollView.zoomScale = parameter.scrollZoomScale
         scrollView.bounds = parameter.scrollViewBounds
         scrollView.contentOffset = parameter.scrollViewContentOffset
         scrollView.transform = parameter.scrollViewTransform
-        updatePosition()
-
-        cropView.frame = parameter.cropFrame
 
         flipTransform = parameter.flipTransform
-        rotation = parameter.rotation
-        straighten = parameter.straighten
     }
 
     var imageTransform: CGAffineTransform {
