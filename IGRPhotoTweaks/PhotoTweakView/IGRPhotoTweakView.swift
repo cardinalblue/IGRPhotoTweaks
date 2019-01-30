@@ -262,17 +262,18 @@ extension IGRPhotoTweakView {
     }
 
     public func update(parameter: CropParameter) {
+        cropView.frame = parameter.cropFrame
+        rotation = parameter.rotation
+        straighten = parameter.straighten
+
+        updatePosition()
+
         scrollView.zoomScale = parameter.scrollZoomScale
         scrollView.bounds = parameter.scrollViewBounds
         scrollView.contentOffset = parameter.scrollViewContentOffset
         scrollView.transform = parameter.scrollViewTransform
-        updatePosition()
-
-        cropView.frame = parameter.cropFrame
 
         flipTransform = parameter.flipTransform
-        rotation = parameter.rotation
-        straighten = parameter.straighten
     }
 
     var imageTransform: CGAffineTransform {
