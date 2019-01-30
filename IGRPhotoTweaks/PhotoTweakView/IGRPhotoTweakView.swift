@@ -182,7 +182,7 @@ public class IGRPhotoTweakView: UIView {
     fileprivate func maxBounds() -> CGRect {
         // scale the image
         self.maximumCanvasSize = CGSize(width: (kMaximumCanvasWidthRatio * self.frame.size.width),
-                                        height: (kMaximumCanvasHeightRatio * self.frame.size.height))
+                                        height: (kMaximumCanvasHeightRatio * self.frame.size.height - self.canvasHeaderHeigth()))
         
         let scaleX: CGFloat = self.image.size.width / self.maximumCanvasSize.width
         let scaleY: CGFloat = self.image.size.height / self.maximumCanvasSize.height
