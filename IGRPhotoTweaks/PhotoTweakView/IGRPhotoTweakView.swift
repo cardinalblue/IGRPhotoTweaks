@@ -109,11 +109,10 @@ public class IGRPhotoTweakView: UIView {
     internal var flipTransform =  CGAffineTransform.identity
 
     // constants
-    fileprivate var maximumCanvasSize: CGSize!
+    internal var maximumCanvasSize: CGSize!
     var centerY: CGFloat {
         return self.canvasHeaderHeigth() + (self.frame.size.height - self.canvasHeaderHeigth()) / 2
     }
-
     fileprivate var originalPoint: CGPoint!
 
     // MARK: - Life Cicle

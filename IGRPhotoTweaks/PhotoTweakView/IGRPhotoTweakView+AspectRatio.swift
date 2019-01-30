@@ -12,8 +12,8 @@ extension IGRPhotoTweakView {
     public func resetAspectRect() {
         self.cropView.frame = CGRect(x: CGFloat.zero,
                                      y: CGFloat.zero,
-                                     width: self.originalSize.width,
-                                     height: self.originalSize.height)
+                                     width: self.maximumCanvasSize.width,
+                                     height: self.maximumCanvasSize.height)
         self.cropView.center = self.scrollView.center
         self.cropView.resetAspectRect()
         
@@ -21,7 +21,7 @@ extension IGRPhotoTweakView {
     }
     
     public func setCropAspectRect(aspect: String) {
-        self.cropView.setCropAspectRect(aspect: aspect, maxSize:self.originalSize)
+        self.cropView.setCropAspectRect(aspect: aspect, maxSize:self.maximumCanvasSize)
         self.cropView.center = self.scrollView.center
         
         self.cropViewDidStopCrop(self.cropView)
