@@ -6,7 +6,7 @@
 //
 //
 
-import Foundation
+import UIKit
 
 extension IGRPhotoTweakView {
     
@@ -18,7 +18,7 @@ extension IGRPhotoTweakView {
     }
 }
 
-extension IGRPhotoTweakView : UIScrollViewDelegate {
+extension IGRPhotoTweakView: UIScrollViewDelegate {
     public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return self.photoContentView
     }
