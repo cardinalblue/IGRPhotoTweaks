@@ -14,18 +14,22 @@ extension IGRPhotoTweakView {
     }
 
     public func isRotated() -> Bool {
-        return atan2(self.scrollView.transform.b, self.scrollView.transform.a) != 0
+        return rotation != 0
     }
 
     public func isStraighten() -> Bool {
-        return self.radians != 0
+        return straighten != 0
     }
 
     public func isDragCropArea() -> Bool {
-        return self.photoContentView.bounds.size != self.cropView.frame.size
+        return didDragCropView
     }
 
     public func isPinchImage() -> Bool {
-        return self.scrollView.zoomScale != 1
+        return didPinchImage
+    }
+
+    public func isCropImage() -> Bool {
+        return self.photoContentView.bounds.size != self.cropView.frame.size
     }
 }

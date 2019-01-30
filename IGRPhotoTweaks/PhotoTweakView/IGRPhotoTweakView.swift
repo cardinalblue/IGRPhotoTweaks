@@ -92,10 +92,13 @@ public class IGRPhotoTweakView: UIView {
     
     internal weak var image: UIImage!
     internal var originalSize = CGSize.zero
-    
-    internal var manualZoomed = false
+
     internal var manualMove   = false
-    
+
+    // Analytics
+    internal var didPinchImage = false
+    internal var didDragCropView = false
+
     // masks
     internal var topMask:    IGRCropMaskView!
     internal var leftMask:   IGRCropMaskView!

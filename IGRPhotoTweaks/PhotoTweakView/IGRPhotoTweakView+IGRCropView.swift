@@ -24,6 +24,7 @@ extension IGRPhotoTweakView : IGRCropViewDelegate {
     }
     
     public func cropViewDidMove(_ cropView: IGRCropView) {
+        self.didDragCropView = true
         self.updateMasks()
     }
     
