@@ -67,8 +67,8 @@ public class IGRPhotoScrollView: UIScrollView {
     //MARK: - Content Offsets
     
     public func checkContentOffset() {
-        self.setContentOffsetX(max(min(self.contentSize.width,  self.contentOffset.x), 0))
-        self.setContentOffsetY(max(min(self.contentSize.height, self.contentOffset.y), 0))
+        self.setContentOffsetX(max(min(self.contentSize.width - self.bounds.width,  self.contentOffset.x), 0))
+        self.setContentOffsetY(max(min(self.contentSize.height - self.bounds.height, self.contentOffset.y), 0))
     }
     
     public func setContentOffsetY(_ offsetY: CGFloat) {
