@@ -14,7 +14,7 @@ extension IGRPhotoTweakView {
     }
 
     public func isRotated() -> Bool {
-        return rotation != 0
+        return rotation.remainder(dividingBy: IGRRadianAngle.toRadians(360)) != 0
     }
 
     public func isStraighten() -> Bool {
