@@ -79,7 +79,6 @@ public class IGRPhotoTweakView: UIView {
     
     internal lazy var scrollView: IGRPhotoScrollView! = { [unowned self] by in
         let maxBounds = self.maxBounds()
-        self.originalSize = maxBounds.size
         
         let scrollView = IGRPhotoScrollView(frame: maxBounds)
         scrollView.center = CGPoint(x: self.frame.width.half, y: self.centerY)
@@ -91,7 +90,6 @@ public class IGRPhotoTweakView: UIView {
     }(())
     
     internal weak var image: UIImage!
-    internal var originalSize = CGSize.zero
 
     internal var manualMove   = false
 
@@ -138,7 +136,6 @@ public class IGRPhotoTweakView: UIView {
         super.layoutSubviews()
         
         if !manualMove {
-            self.originalSize = self.maxBounds().size
             self.scrollView.center = CGPoint(x: (self.frame.width * 0.5), y: centerY)
             
             self.cropView.center = self.scrollView.center
@@ -155,8 +152,8 @@ public class IGRPhotoTweakView: UIView {
             self.scrollView.center = CGPoint(x: self.frame.width.half, y: self.centerY)
             self.scrollView.bounds = CGRect(x: CGFloat.zero,
                                             y: CGFloat.zero,
-                                            width: self.originalSize.width,
-                                            height: self.originalSize.height)
+                                            width: self.maximumCanvasSize.width,
+                                            height: self.maximumCanvasSize.height)
             self.scrollView.minimumZoomScale = 1.0
             self.scrollView.setZoomScale(1.0, animated: false)
             
@@ -169,16 +166,13 @@ public class IGRPhotoTweakView: UIView {
         self.resetView()
         
         self.scrollView.center = CGPoint(x: self.frame.width.half, y: centerY)
-        self.scrollView.bounds = CGRect(x: CGFloat.zero,
-                                        y: CGFloat.zero,
-                                        width: self.originalSize.width,
-                                        height: self.originalSize.height)
+        self.scrollView.bounds = self.maxBounds()
         
-        self.cropView.frame = self.scrollView.frame
+        self.cropView.frame = self.scrollView.bounds
         self.cropView.center = self.scrollView.center
         
         // Update 'photoContent' frame and set the image.
-        self.scrollView.photoContentView.frame = .init(x: .zero, y: .zero, width: self.cropView.frame.width, height: self.cropView.frame.height)
+        self.scrollView.photoContentView.frame = self.cropView.bounds
         self.scrollView.photoContentView.image = self.image
         
         updatePosition()

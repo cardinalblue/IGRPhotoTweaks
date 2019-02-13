@@ -21,7 +21,7 @@ let kGridLinesCount: Int = 8
 let kCropViewHotArea: CGFloat           = 22.0
 
 let kMaximumCanvasWidthRatio: CGFloat   = 0.9
-let kMaximumCanvasHeightRatio: CGFloat  = 0.8
+let kMaximumCanvasHeightRatio: CGFloat  = 0.9
 let kCanvasHeaderHeigth: CGFloat        = 100.0
 
 let kCropViewLineWidth: CGFloat         = 2.0
