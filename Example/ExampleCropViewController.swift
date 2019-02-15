@@ -66,11 +66,7 @@ class ExampleCropViewController: IGRPhotoTweakViewController {
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
         
-        coordinator.animate(alongsideTransition: { (context) in
-            self.view.layoutIfNeeded()
-        }) { (context) in
-            //
-        }
+        coordinator.animate(alongsideTransition: { _ in self.photoView.applyDeviceRotation()})
     }
     
     // MARK: - Actions
