@@ -82,11 +82,13 @@ public class IGRPhotoTweakView: UIView {
         
         let scrollView = IGRPhotoScrollView(frame: maxBounds)
         scrollView.center = CGPoint(x: self.frame.width.half, y: self.centerY)
+        scrollView.delegate = self
+        scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
         if #available(iOS 11, *) {
             scrollView.contentInsetAdjustmentBehavior = UIScrollView.ContentInsetAdjustmentBehavior.never;
         }
-        scrollView.delegate = self
-        scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
         self.addSubview(scrollView)
         
         return scrollView
