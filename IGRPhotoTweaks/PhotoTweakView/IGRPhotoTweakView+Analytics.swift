@@ -10,7 +10,7 @@ import UIKit
 
 extension IGRPhotoTweakView {
 
-    public func didChange() -> Bool {
+    public var didChange: Bool {
         return isFliped
                 || isCropped
                 || isRotated
