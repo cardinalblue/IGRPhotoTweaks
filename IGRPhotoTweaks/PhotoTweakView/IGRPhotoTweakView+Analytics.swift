@@ -9,27 +9,33 @@ import Foundation
 import UIKit
 
 extension IGRPhotoTweakView {
-    public func isFliped() -> Bool {
+
+    public func didChange() -> Bool {
+        return isFliped
+                || isCropped
+                || isRotated
+                || isStraightened
+                || didDragCropArea
+                || didPinchImage
+    }
+
+    public var isCropped: Bool {
+        return self.photoContentView.bounds.size != self.cropView.frame.size
+    }
+
+    public var isFliped: Bool {
         return flipTransform != .identity
     }
 
-    public func isRotated() -> Bool {
+    public var isRotated: Bool {
         return rotation.remainder(dividingBy: IGRRadianAngle.toRadians(360)) != 0
     }
 
-    public func isStraighten() -> Bool {
-        return straighten != 0
+    public var isStraightened: Bool {
+        return straighten.remainder(dividingBy: IGRRadianAngle.toRadians(360)) != 0
     }
 
-    public func isDragCropArea() -> Bool {
+    public var didDragCropArea: Bool {
         return didDragCropView
-    }
-
-    public func isPinchImage() -> Bool {
-        return didPinchImage
-    }
-
-    public func isCropImage() -> Bool {
-        return self.photoContentView.bounds.size != self.cropView.frame.size
     }
 }

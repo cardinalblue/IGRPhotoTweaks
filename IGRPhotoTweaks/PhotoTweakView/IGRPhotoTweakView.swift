@@ -99,7 +99,7 @@ public class IGRPhotoTweakView: UIView {
     internal var manualMove   = false
 
     // Analytics
-    internal var didPinchImage = false
+    public var didPinchImage = false
     internal var didDragCropView = false
 
     // masks
