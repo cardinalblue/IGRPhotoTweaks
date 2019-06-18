@@ -11,7 +11,8 @@ Pod::Spec.new do |spec|
   spec.source              = {:git => 'https://github.com/cardinalblue/IGRPhotoTweaks.git', :tag => spec.version}
   
   spec.source_files        = 'IGRPhotoTweaks/**/*.{h,swift}'
-  
+
+  spec.static_framework    = true
   spec.framework           = 'Foundation', 'CoreGraphics', 'UIKit', 'Photos'
   spec.requires_arc        = true
   spec.swift_version       = '4.2'
