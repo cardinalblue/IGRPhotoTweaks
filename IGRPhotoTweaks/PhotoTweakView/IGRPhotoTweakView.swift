@@ -153,6 +153,7 @@ public class IGRPhotoTweakView: UIView {
         UIView.animate(withDuration: kAnimationDuration, animations: {() -> Void in
             self.straighten = CGFloat.zero
             self.rotation = CGFloat.zero
+            self.flipTransform = CGAffineTransform.identity
             self.scrollView.transform = CGAffineTransform.identity
             self.scrollView.center = CGPoint(x: self.frame.width.half, y: self.centerY)
             self.scrollView.bounds = CGRect(x: CGFloat.zero,
