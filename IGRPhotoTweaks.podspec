@@ -1,11 +1,11 @@
 Pod::Spec.new do |spec|
   spec.name                = 'IGRPhotoTweaks'
-  spec.version             = '1.0.16-cb'
+  spec.version             = '1.1.0'
   spec.platform            = :ios, '10.0'
   
   spec.license             = { :type => "MIT", :file => "LICENSE" }
   spec.homepage            = 'https://github.com/cardinalblue/IGRPhotoTweaks'
-  spec.authors             = {'Vitalii Parovishnyk' => 'korich.vi.p@gmail.com'}
+  spec.authors             = { 'ios' => 'ios@cardinalblue.com', 'Vitalii Parovishnyk' => 'korich.vi.p@gmail.com'}
   spec.summary             = 'Drag, Rotate, Scale and Crop.'
   
   spec.source              = {:git => 'https://github.com/cardinalblue/IGRPhotoTweaks.git', :tag => spec.version}
