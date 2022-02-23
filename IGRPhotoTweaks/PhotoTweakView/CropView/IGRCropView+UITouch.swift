@@ -6,6 +6,7 @@
 //
 //
 
+import CoreGraphics
 import Foundation
 
 extension IGRCropView {
@@ -93,6 +94,10 @@ extension IGRCropView {
 
             //TODO: Added test cropViewInsideValidFrame
 
+            if let validFrame = delegate?.cropViewNeedsValidFrame(self) {
+                frame = validFrame.intersection(frame)
+            }
+
             if (frame.size.width > self.cornerBorderLength
                 && frame.size.height > self.cornerBorderLength) {
                 self.frame = frame
@@ -111,6 +116,6 @@ extension IGRCropView {
 
     override public func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.currentControlState = nil
-        self.delegate?.cropViewDidStopCrop(self	)
+        self.delegate?.cropViewDidStopCrop(self)
     }
 }

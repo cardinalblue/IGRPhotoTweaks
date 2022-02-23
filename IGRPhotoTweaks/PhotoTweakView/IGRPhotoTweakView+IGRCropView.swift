@@ -87,8 +87,15 @@ extension IGRPhotoTweakView : IGRCropViewDelegate {
     }
 
     public func cropViewInsideValidFrame(for point: CGPoint, from cropView: IGRCropView) -> Bool {
-        let updatedPoint = self.convert(point, to: self.scrollView.photoContentView)
+        let updatedPoint = cropView.convert(point, to: self.scrollView.photoContentView)
+        let transform = self.scrollView.photoContentView.transform
+        let scale = sqrt(transform.a * transform.a + transform.c * transform.c)
         let frame = self.scrollView.photoContentView.frame
+            .applying(CGAffineTransform(scaleX: 1 / scale, y: 1 / scale))
         return frame.contains(updatedPoint)
+    }
+
+    public func cropViewNeedsValidFrame(_ cropView: IGRCropView) -> CGRect {
+        scrollView.convert(scrollView.photoContentView.frame, to: self)
     }
 }
