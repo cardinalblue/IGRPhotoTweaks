@@ -28,6 +28,11 @@ public protocol IGRCropViewDelegate : class {
      Calls ones, when change a Crop frame
      */
     func cropViewInsideValidFrame(for point: CGPoint, from cropView: IGRCropView) -> Bool
+
+    /*
+     Call always when user move touch around view. This to limit cropView's area
+     */
+    func cropViewNeedsValidFrame(_ cropView: IGRCropView) -> CGRect
 }
 
 public class IGRCropView: UIView {
@@ -46,24 +51,25 @@ public class IGRCropView: UIView {
         var lines = self.setupHorisontalLines(count: self.cropLinesCount,
                                               className: IGRCropLine.self)
         return lines as! [IGRCropLine]
-        }(())
+    }(())
 
     internal lazy var verticalCropLines: [IGRCropLine] = { [unowned self] by in
         var lines = self.setupVerticalLines(count: self.cropLinesCount,
                                             className: IGRCropLine.self)
         return lines as! [IGRCropLine]
-        }(())
+    }(())
 
     internal lazy var horizontalGridLines: [IGRCropGridLine] = { [unowned self] by in
         var lines = self.setupHorisontalLines(count: self.gridLinesCount,
                                               className: IGRCropGridLine.self)
         return lines as! [IGRCropGridLine]
-        }(())
+    }(())
+    
     internal lazy var verticalGridLines: [IGRCropGridLine] = { [unowned self] by in
         var lines = self.setupVerticalLines(count: self.gridLinesCount,
                                             className: IGRCropGridLine.self)
         return lines as! [IGRCropGridLine]
-        }(())
+    }(())
 
     internal var cornerBorderLength      = kCropViewCornerLength
     internal var cornerBorderWidth       = kCropViewCornerWidth
