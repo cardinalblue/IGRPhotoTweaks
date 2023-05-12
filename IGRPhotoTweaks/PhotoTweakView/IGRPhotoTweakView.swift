@@ -246,6 +246,34 @@ public struct CropParameter {
 
     public let rotation: CGFloat
     public let straighten: CGFloat
+
+    public init(
+        transform: CGAffineTransform,
+        zoomScale: CGFloat,
+        flipTransform: CGAffineTransform,
+        sourceSize: CGSize,
+        imageViewFrame: CGRect,
+        cropFrame: CGRect,
+        scrollZoomScale: CGFloat,
+        scrollViewTransform: CGAffineTransform,
+        scrollViewBounds: CGRect,
+        scrollViewContentOffset: CGPoint,
+        rotation: CGFloat,
+        straighten: CGFloat
+    ) {
+        self.transform = transform
+        self.zoomScale = zoomScale
+        self.flipTransform = flipTransform
+        self.sourceSize = sourceSize
+        self.imageViewFrame = imageViewFrame
+        self.cropFrame = cropFrame
+        self.scrollZoomScale = scrollZoomScale
+        self.scrollViewTransform = scrollViewTransform
+        self.scrollViewBounds = scrollViewBounds
+        self.scrollViewContentOffset = scrollViewContentOffset
+        self.rotation = rotation
+        self.straighten = straighten
+    }
 }
 
 extension IGRPhotoTweakView {
