@@ -8,25 +8,72 @@
 
 import UIKit
 
+public class IGRPhotoMaskView: UIView {
+
+    // The @objc dynamic is for UIAppearance
+    @objc dynamic
+    public var maskColor: UIColor? = .mask()
+
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        backgroundColor = maskColor
+    }
+}
+
 public class IGRPhotoContentView: UIView {
+
+    fileprivate var photoMaskView = IGRPhotoMaskView()
+
+    // The visible rectangle representing the normalized area for the content view.
+    public var croppedRect: CGRect = CGRect(origin: .zero, size: CGSize(width: 1, height: 1)) {
+        didSet {
+            updateMaskView()
+        }
+    }
     
-    lazy fileprivate var imageView: UIImageView! = {
-        let imageView = UIImageView(frame: self.bounds)
-        self.addSubview(imageView)
-        
+    fileprivate lazy var imageView: UIImageView = {
+        let imageView = UIImageView(frame: bounds)
+        addSubview(imageView)
+        imageView.addSubview(photoMaskView)
         return imageView
     }()
     
-    public var image: UIImage! {
+    public var image: UIImage? {
         didSet {
-            self.imageView.frame = self.bounds
-            self.imageView.image = self.image
-            self.imageView.isUserInteractionEnabled = true
+            imageView.frame = bounds
+            imageView.image = image
+            imageView.isUserInteractionEnabled = true
         }
     }
     
     override public func layoutSubviews() {
         super.layoutSubviews()
-        self.imageView?.frame = self.bounds
+
+        imageView.frame = bounds
+        photoMaskView.frame = imageView.bounds
+        updateMaskView()
     }
+
+    private func updateMaskView() {
+        let clearRect = croppedRect
+            .applying(CGAffineTransform(scaleX: bounds.width, y: bounds.height))
+        photoMaskView.makeClear(rect: clearRect)
+    }
+}
+
+private extension UIView {
+
+    func makeClear(rect: CGRect) {
+        let maskLayer = CAShapeLayer()
+        maskLayer.fillRule = CAShapeLayerFillRule.evenOdd
+        maskLayer.fillColor = UIColor.black.cgColor
+
+        let pathToOverlay = UIBezierPath(rect: bounds)
+        pathToOverlay.append(UIBezierPath(rect: rect))
+        pathToOverlay.usesEvenOddFillRule = true
+        maskLayer.path = pathToOverlay.cgPath
+
+        layer.mask = maskLayer
+    }
+
 }

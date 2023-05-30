@@ -88,6 +88,7 @@ open class IGRPhotoTweakViewController: UIViewController {
     open func setupThemes() {
         IGRPhotoTweakView.appearance().backgroundColor = UIColor.photoTweakCanvasBackground()
         IGRPhotoContentView.appearance().backgroundColor = UIColor.clear
+        IGRPhotoMaskView.appearance().maskColor = UIColor.mask()
         IGRCropView.appearance().backgroundColor = UIColor.clear
         IGRCropGridLine.appearance().backgroundColor = UIColor.gridLine()
         IGRCropLine.appearance().backgroundColor = UIColor.cropLine()
