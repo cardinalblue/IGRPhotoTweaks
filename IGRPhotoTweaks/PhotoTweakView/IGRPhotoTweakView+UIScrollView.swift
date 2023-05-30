@@ -51,6 +51,14 @@ extension IGRPhotoTweakView: UIScrollViewDelegate {
                                     y: max(min(self.scrollView.contentSize.height, self.scrollView.contentOffset.y + velocity.y), 0))
         targetContentOffset.pointee = contentOffset
     }
+
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        updatePhotoMask()
+    }
+
+    public func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        updatePhotoMask()
+    }
 }
 
 extension IGRPhotoTweakView : IGRPhotoScrollViewDelegate {

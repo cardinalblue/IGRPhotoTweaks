@@ -29,6 +29,19 @@ extension IGRPhotoTweakView {
     
     internal func updateMasks() {
         self.layoutIfNeeded()
+
+        updatePhotoMask()
+    }
+
+    func updatePhotoMask() {
+        guard let superview = cropView.superview else {
+            return
+        }
+        let size = photoContentView.bounds.size
+        let transform = CGAffineTransform(scaleX: 1 / size.width, y: 1 / size.height)
+        var croppedRect = superview.convert(cropView.frame, to: photoContentView)
+        croppedRect = croppedRect.applying(transform)
+        photoContentView.croppedRect = croppedRect
     }
     
     internal func highlightMask(_ highlight:Bool, animate: Bool) {
