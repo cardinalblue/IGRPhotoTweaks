@@ -182,6 +182,7 @@ public class IGRPhotoTweakView: UIView {
         self.scrollView.photoContentView.image = self.image
         
         updatePosition()
+        updateMasks()
     }
     
     //MARK: - Private FUNCs
@@ -305,6 +306,7 @@ extension IGRPhotoTweakView {
         scrollView.transform = parameter.scrollViewTransform
 
         flipTransform = parameter.flipTransform
+        updateMasks()
     }
 
     var imageTransform: CGAffineTransform {
