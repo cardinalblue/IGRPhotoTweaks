@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol IGRCropViewDelegate : class {
+public protocol IGRCropViewDelegate : AnyObject {
     /*
      Calls ones, when user start interaction with view
      */

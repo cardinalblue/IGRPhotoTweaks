@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol IGRPhotoScrollViewDelegate : class{
+public protocol IGRPhotoScrollViewDelegate : AnyObject {
     /*
      Calls ones, when user start interaction with view
      */

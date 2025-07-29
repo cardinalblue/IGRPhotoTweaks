@@ -9,7 +9,7 @@
 import UIKit
 
 
-public protocol IGRPhotoTweakViewControllerDelegate : class {
+public protocol IGRPhotoTweakViewControllerDelegate : AnyObject {
     
     /**
      Called on image cropped.

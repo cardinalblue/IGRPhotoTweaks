@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-public protocol IGRPhotoTweakViewCustomizationDelegate : class {
+public protocol IGRPhotoTweakViewCustomizationDelegate : AnyObject {
     /*
      Lines between mask and crop area
      */
