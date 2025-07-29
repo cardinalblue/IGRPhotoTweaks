@@ -9,7 +9,7 @@
 import UIKit
 
 
-public protocol IGRPhotoTweakViewControllerDelegate : class {
+public protocol IGRPhotoTweakViewControllerDelegate : AnyObject {
     
     /**
      Called on image cropped.
@@ -61,7 +61,7 @@ open class IGRPhotoTweakViewController: UIViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        self.automaticallyAdjustsScrollViewInsets = false
+        self.photoView.scrollView.contentInsetAdjustmentBehavior = .never
         self.view.clipsToBounds = true
         
         self.setupThemes()

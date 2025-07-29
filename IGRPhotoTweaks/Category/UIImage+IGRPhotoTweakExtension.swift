@@ -40,6 +40,9 @@ extension UIImage {
             
         case .up, .upMirrored:
             break
+
+        @unknown default:
+            break
         }
         
         switch self.imageOrientation {

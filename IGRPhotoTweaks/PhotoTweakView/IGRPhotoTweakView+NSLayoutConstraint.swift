@@ -6,16 +6,19 @@
 //
 //
 
+import UIKit
 import Foundation
 
 extension IGRPhotoTweakView {
-    
-    internal func setupMaskLayoutConstraints() {
-        
+    func setupMaskLayoutConstraints() {
+        guard let topMask, let leftMask, let bottomMask, let rightMask else {
+            return
+        }
+
         //MARK: Top
-        self.topMask.translatesAutoresizingMaskIntoConstraints = false
-        
-        var top = NSLayoutConstraint(item: self.topMask,
+        topMask.translatesAutoresizingMaskIntoConstraints = false
+
+        var top = NSLayoutConstraint(item: topMask,
                                      attribute: .top,
                                      relatedBy: .equal,
                                      toItem: self,
@@ -23,7 +26,7 @@ extension IGRPhotoTweakView {
                                      multiplier: 1.0,
                                      constant: 0.0)
         
-        var leading = NSLayoutConstraint(item: self.topMask,
+        var leading = NSLayoutConstraint(item: topMask,
                                          attribute: .leading,
                                          relatedBy: .equal,
                                          toItem: self,
@@ -31,7 +34,7 @@ extension IGRPhotoTweakView {
                                          multiplier: 1.0,
                                          constant: 0.0)
         
-        var trailing = NSLayoutConstraint(item: self.topMask,
+        var trailing = NSLayoutConstraint(item: topMask,
                                           attribute: .trailing,
                                           relatedBy: .equal,
                                           toItem: self.cropView,
@@ -40,7 +43,7 @@ extension IGRPhotoTweakView {
                                           constant: 0.0)
         trailing.priority = .defaultHigh
         
-        var bottom = NSLayoutConstraint(item: self.topMask,
+        var bottom = NSLayoutConstraint(item: topMask,
                                         attribute: .bottom,
                                         relatedBy: .equal,
                                         toItem: self.cropView,
@@ -52,9 +55,9 @@ extension IGRPhotoTweakView {
         self.addConstraints([top, leading, trailing, bottom])
         
         //MARK: Left
-        self.leftMask.translatesAutoresizingMaskIntoConstraints = false
+        leftMask.translatesAutoresizingMaskIntoConstraints = false
         
-        top = NSLayoutConstraint(item: self.leftMask,
+        top = NSLayoutConstraint(item: leftMask,
                                  attribute: .top,
                                  relatedBy: .equal,
                                  toItem: self.cropView,
@@ -63,7 +66,7 @@ extension IGRPhotoTweakView {
                                  constant: 0.0)
         top.priority = .defaultHigh
         
-        leading = NSLayoutConstraint(item: self.leftMask,
+        leading = NSLayoutConstraint(item: leftMask,
                                      attribute: .leading,
                                      relatedBy: .equal,
                                      toItem: self,
@@ -71,7 +74,7 @@ extension IGRPhotoTweakView {
                                      multiplier: 1.0,
                                      constant: 0.0)
         
-        trailing = NSLayoutConstraint(item: self.leftMask,
+        trailing = NSLayoutConstraint(item: leftMask,
                                       attribute: .trailing,
                                       relatedBy: .equal,
                                       toItem: self.cropView,
@@ -80,7 +83,7 @@ extension IGRPhotoTweakView {
                                       constant: 0.0)
         trailing.priority = .defaultHigh
         
-        bottom = NSLayoutConstraint(item: self.leftMask,
+        bottom = NSLayoutConstraint(item: leftMask,
                                     attribute: .bottom,
                                     relatedBy: .equal,
                                     toItem: self,
@@ -91,9 +94,9 @@ extension IGRPhotoTweakView {
         self.addConstraints([top, leading, trailing, bottom])
         
         //MARK: Right
-        self.rightMask.translatesAutoresizingMaskIntoConstraints = false
+        rightMask.translatesAutoresizingMaskIntoConstraints = false
         
-        top = NSLayoutConstraint(item: self.rightMask,
+        top = NSLayoutConstraint(item: rightMask,
                                  attribute: .top,
                                  relatedBy: .equal,
                                  toItem: self,
@@ -101,7 +104,7 @@ extension IGRPhotoTweakView {
                                  multiplier: 1.0,
                                  constant: 0.0)
         
-        leading = NSLayoutConstraint(item: self.rightMask,
+        leading = NSLayoutConstraint(item: rightMask,
                                      attribute: .leading,
                                      relatedBy: .equal,
                                      toItem: self.cropView,
@@ -110,7 +113,7 @@ extension IGRPhotoTweakView {
                                      constant: 0.0)
         leading.priority = .defaultHigh
         
-        trailing = NSLayoutConstraint(item: self.rightMask,
+        trailing = NSLayoutConstraint(item: rightMask,
                                       attribute: .trailing,
                                       relatedBy: .equal,
                                       toItem: self,
@@ -118,7 +121,7 @@ extension IGRPhotoTweakView {
                                       multiplier: 1.0,
                                       constant: 0.0)
         
-        bottom = NSLayoutConstraint(item: self.rightMask,
+        bottom = NSLayoutConstraint(item: rightMask,
                                     attribute: .bottom,
                                     relatedBy: .equal,
                                     toItem: self.cropView,
@@ -130,9 +133,9 @@ extension IGRPhotoTweakView {
         self.addConstraints([top, leading, trailing, bottom])
         
         //MARK: Bottom
-        self.bottomMask.translatesAutoresizingMaskIntoConstraints = false
+        bottomMask.translatesAutoresizingMaskIntoConstraints = false
         
-        top = NSLayoutConstraint(item: self.bottomMask,
+        top = NSLayoutConstraint(item: bottomMask,
                                  attribute: .top,
                                  relatedBy: .equal,
                                  toItem: self.cropView,
@@ -141,7 +144,7 @@ extension IGRPhotoTweakView {
                                  constant: 0.0)
         top.priority = .defaultHigh
         
-        leading = NSLayoutConstraint(item: self.bottomMask,
+        leading = NSLayoutConstraint(item: bottomMask,
                                      attribute: .leading,
                                      relatedBy: .equal,
                                      toItem: self.cropView,
@@ -150,7 +153,7 @@ extension IGRPhotoTweakView {
                                      constant: 0.0)
         leading.priority = .defaultHigh
         
-        trailing = NSLayoutConstraint(item: self.bottomMask,
+        trailing = NSLayoutConstraint(item: bottomMask,
                                       attribute: .trailing,
                                       relatedBy: .equal,
                                       toItem: self,
@@ -158,7 +161,7 @@ extension IGRPhotoTweakView {
                                       multiplier: 1.0,
                                       constant: 0.0)
         
-        bottom = NSLayoutConstraint(item: self.bottomMask,
+        bottom = NSLayoutConstraint(item: bottomMask,
                                     attribute: .bottom,
                                     relatedBy: .equal,
                                     toItem: self,
